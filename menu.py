@@ -99,7 +99,7 @@ class DecanatMenu(tk.Tk):
                 _id = self.table.item(item, "values")[0]
             
             student = postgresDB.get_student(_id)
-
+            
             self.win_edit = tk.Tk()
             self.win_edit.title('Оновити інформацію...')
             self.win_edit.geometry("350x150")
@@ -125,11 +125,10 @@ class DecanatMenu(tk.Tk):
             st_subject_label = tk.Label(self.win_edit, text="Дисципліна", bg='#DFF0E9')
             st_subject_label.grid(row=3, column=0)
 
-            for el in student:
-                st_course.insert(0, el[1])
-                st_group.insert(0, el[2])
-                st_name.insert(0, el[3])
-                st_subject.insert(0, el[4])
+            st_course.insert(0, student.course)
+            st_group.insert(0, student.group_name)
+            st_name.insert(0, student.student)
+            st_subject.insert(0, student.subject)
             
             #function for updating
             def update_student():

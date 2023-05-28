@@ -23,7 +23,7 @@ class MysqlDB():
                 table_name = 'db3'
 
         self.decanat = DecanatModel
-        self.db.create_tables([DecanatModel])
+        self.db.create_tables([DecanatModel], safe=True)
          
     def select_all_records(self):
         rows = list(self.decanat.select().dicts())
