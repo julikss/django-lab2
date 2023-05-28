@@ -168,6 +168,7 @@ class DecanatMenu(tk.Tk):
         #second export to mysql (4 fields)
         def export_to_mysql():
             records2 = sqliteDB.select_all_records()
+            mysqlDB.delete_records()
             for row in records2:
                 mysqlDB.insert(row[:4])
 
@@ -203,7 +204,7 @@ class DecanatMenu(tk.Tk):
         #first export to sqlite
         def export_to_sqlite():
             records1 = postgresDB.read()
-            sqliteDB.create_table()
+            sqliteDB.delete_records()
             for row in records1:
                 sqliteDB.insert(row)
 
