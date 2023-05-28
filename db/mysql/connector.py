@@ -2,11 +2,6 @@ import peewee as pw
 
 class MysqlDB():
     def __init__(self):
-        super().__init__()
-        self.connect()
-        self.create_table()
-
-    def connect(self):
         self.db = pw.MySQLDatabase(
             'decanatdb',
             user = 'root',
@@ -14,7 +9,7 @@ class MysqlDB():
             host = 'localhost'
         )
 
-        self.db.connect()
+        self.create_table()
 
     def create_table(self):
         class DecanatModel(pw.Model):
@@ -23,9 +18,9 @@ class MysqlDB():
             group_name = pw.CharField(null=False)
             student = pw.CharField(null=False)
         
-        class Meta:
-            db = self.db
-            table_name = 'db3'
+            class Meta:
+                database = self.db
+                table_name = 'db3'
 
         self.decanat = DecanatModel
         self.db.create_tables([DecanatModel])
@@ -42,3 +37,4 @@ class MysqlDB():
     def delete_records(self):
         self.decanat.delete().execute()
 
+mysqlDB = MysqlDB()
