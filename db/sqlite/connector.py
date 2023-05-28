@@ -1,39 +1,39 @@
-import sqlite3
+import peewee as pw
 
 class SqliteDB:
-    def __init__(self, path: str):
-        self.conn = sqlite3.connect(path)
+    def __init__(self):
+        self.db = pw.SqliteDatabase('db2.db')
+        self.db.connect()
         self.create_table()
     
     def create_table(self):
-        self.conn.execute('''
-            CREATE TABLE IF NOT EXISTS db2 (
-                student_id INTEGER PRIMARY KEY NOT NULL,
-                course INTEGER NOT NULL,
-                group_name TEXT NOT NULL,
-                student TEXT NOT NULL,
-                subject TEXT NOT NULL
-            )''')
+        class DecanatModel(pw.Model):
+            student_id = pw.IntegerField(primary_key=True)
+            course = pw.IntegerField(null=False)
+            group_name = pw.CharField(null=False)
+            student = pw.CharField(null=False)
+            subject = pw.CharField(null=False)
+
+            class Meta:
+                database = self.db
+                table_name = 'db2'
+
+        self.decanat = DecanatModel
+        self.db.create_tables([DecanatModel])
     
     def insert(self, data):
-        self.conn.execute('''
-            INSERT INTO db2 (
-                student_id, 
-                course, 
-                group_name, 
-                student, 
-                subject) VALUES (?, ?, ?, ?, ?)''', data)
+        self.decanat.create(student_id=data[0], course=data[1], group_name=data[2], student=data[3], subject=data[4])
 
     def delete_records(self):
-        self.conn.execute('DELETE FROM db2')
+        q = self.decanat.delete()
+        q.execute()
 
     def select_all_records(self):
-        cur = self.conn.execute('SELECT * FROM db2')
-        records = cur.fetchall()
-        return records
+        data = list(self.decanat.select().tuples())
+        return data
 
     def __del__(self):
-        self.conn.close() 
+        self.db.close() 
 
 
-sqliteDB = SqliteDB("db2.db")
+sqliteDB = SqliteDB()
